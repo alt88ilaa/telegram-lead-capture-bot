@@ -1,0 +1,478 @@
+{
+  "name": "ped_project1",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "callback_query",
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        -912,
+        -304
+      ],
+      "id": "d88a1a4c-40a2-418a-b75b-8303cba554c6",
+      "name": "Telegram Trigger",
+      "webhookId": "ee6dca79-2a70-4914-8d44-3448f8990059",
+      "credentials": {
+        "telegramApi": {
+          "id": "Ph1z3D2nfyxaTyPN",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "Спасибо! Ваша заявка принята. Менеджер свяжется в течение 15 минут.",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -240,
+        -112
+      ],
+      "id": "37b8b29e-f5b9-4122-9343-d3ee9e01bfa7",
+      "name": "Send a text message",
+      "webhookId": "0c212790-ab40-4f32-9ad1-9131da28ffa5",
+      "credentials": {
+        "telegramApi": {
+          "id": "Ph1z3D2nfyxaTyPN",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "=Здравствуйте! Рады приветствовать Вас. \nВыберите направление, которое Вас интересует, нажав на кнопку ниже:",
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "🤖 Заказ: Telegram-бот",
+                    "additionalFields": {
+                      "callback_data": "Telegram-бот"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "🌐 Заказ: Разработка сайта",
+                    "additionalFields": {
+                      "callback_data": "Разработка сайта"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -464,
+        -496
+      ],
+      "id": "cb0ac71e-e71b-4c4e-9a8f-185fe0f51773",
+      "name": "Send a text message1",
+      "webhookId": "5d9380d7-b272-45d1-a769-6e6fee0ee6d5",
+      "credentials": {
+        "telegramApi": {
+          "id": "Ph1z3D2nfyxaTyPN",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message?.text }}",
+                    "rightValue": "/start",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "add29dd9-8982-4bc3-b9bb-adb7e0286131"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "716ea7b9-6720-40cd-ae39-bba06077f258",
+                    "leftValue": "={{ $json.callback_query?.data }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notEmpty",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -688,
+        -320
+      ],
+      "id": "6433f367-9351-4241-a3e2-d2efaffe4f2e",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.callback_query.from.id }}",
+        "text": "=Вы выбрали направление: {{ $('Telegram Trigger').item.json.callback_query.data }}. Опишите вашу задачу:",
+        "replyMarkup": "forceReply",
+        "forceReply": {
+          "force_reply": true
+        },
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -288,
+        -304
+      ],
+      "id": "5f2426d9-c2e2-4928-bc07-b32343baa210",
+      "name": "Send a text message2",
+      "webhookId": "d47fa2b7-4a3c-4eb0-8a87-504cf06f217a",
+      "credentials": {
+        "telegramApi": {
+          "id": "Ph1z3D2nfyxaTyPN",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "callback",
+        "queryId": "={{ $json.callback_query.id }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -464,
+        -304
+      ],
+      "id": "db70245a-c73d-4d68-b54e-1838de160142",
+      "name": "Answer Query a callback",
+      "webhookId": "e990a221-fd8d-4530-bfe3-52c306c4e7d0",
+      "credentials": {
+        "telegramApi": {
+          "id": "Ph1z3D2nfyxaTyPN",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "urID",
+        "text": "=🔥 НОВЫЙ ЛИД\n\n👤 Клиент: {{ $('Telegram Trigger').item.json.message.from.first_name }} (@{{ $('Telegram Trigger').item.json.message.from.username }})\n💼 Услуга: {{ $('Telegram Trigger').item.json.message.reply_to_message ? $('Telegram Trigger').item.json.message.reply_to_message.text.replace('Вы выбрали направление: ', '').split('.')[0] : 'Не определена' }}\n📝 Задача: {{ $('Telegram Trigger').item.json.message.text }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -16,
+        -112
+      ],
+      "id": "42494a6c-d2d7-4d8e-bc64-b8b2e0ca5908",
+      "name": "Send a text message3",
+      "webhookId": "2f16b407-6fa5-437d-90de-8a41c660aaf9",
+      "credentials": {
+        "telegramApi": {
+          "id": "Ph1z3D2nfyxaTyPN",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1UqzCGxMtwdx-9EnApE4gnnGM3IXSariUhFSLj7SiQN0",
+          "mode": "list",
+          "cachedResultName": "Заявки из Telegram",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1UqzCGxMtwdx-9EnApE4gnnGM3IXSariUhFSLj7SiQN0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Лист1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1UqzCGxMtwdx-9EnApE4gnnGM3IXSariUhFSLj7SiQN0/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "A1: Дата": "={{ $now.format('yyyy-MM-dd HH:mm') }}",
+            "D1: Текст заявки": "={{ $json.message.text }}",
+            "B1: Юзернейм": "={{ $json.message.from.username ? '@' + $json.message.from.username : 'Без юзернейма' }}",
+            "C1: Имя": "={{ $json.message.from.first_name }}",
+            "E1: Услуга": "={{ $json.message.reply_to_message ? $json.message.reply_to_message.text.replace('Вы выбрали направление: ', '').split('.')[0] : 'Не указана' }}",
+            "F1: User ID": "={{ $('Telegram Trigger').item.json.message.from.id }}"
+          },
+          "matchingColumns": [
+            "F1: id"
+          ],
+          "schema": [
+            {
+              "id": "A1: Дата",
+              "displayName": "A1: Дата",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "B1: Юзернейм",
+              "displayName": "B1: Юзернейм",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "C1: Имя",
+              "displayName": "C1: Имя",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "D1: Текст заявки",
+              "displayName": "D1: Текст заявки",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "E1: Услуга",
+              "displayName": "E1: Услуга",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "F1: User ID",
+              "displayName": "F1: User ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -464,
+        -112
+      ],
+      "id": "b686468a-b62c-4853-91f1-1ade8ce91b6b",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "nmPp9yHk6m0Cqu0i",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Telegram Trigger": [
+      {
+        "json": {
+          "update_id": 279398033,
+          "message": {
+            "message_id": 141,
+            "from": {
+              "id": id,
+              "is_bot": false,
+              "first_name": "илья",
+              "username": "makenugakachi",
+              "language_code": "ru",
+              "is_premium": true
+            },
+            "chat": {
+              "id": id,
+              "first_name": "илья",
+              "username": "makenugakachi",
+              "type": "private"
+            },
+            "date": 1788630101,
+            "text": "/start",
+            "entities": [
+              {
+                "offset": 0,
+                "length": 6,
+                "type": "bot_command"
+              }
+            ]
+          }
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Send a text message1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Answer Query a callback",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Answer Query a callback": {
+      "main": [
+        [
+          {
+            "node": "Send a text message2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a text message": {
+      "main": [
+        [
+          {
+            "node": "Send a text message3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "dcd43b9a-78a2-4c85-a630-7eb953ad79b7",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "32a943d5be9a9ad8cf60d285fde54cd2fba2d57940c82c1fd2815fb618fd8b45"
+  },
+  "nodeGroups": [],
+  "id": "dYIMzJln0BjFwYwY",
+  "tags": []
+}
